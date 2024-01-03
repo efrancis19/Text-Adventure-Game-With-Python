@@ -25,19 +25,49 @@ class Player():
         self.inventory['apple'] = 1
         return self.inventory
 
-    def add_to_inventory(self):
+    def add_to_inventory_and_weapons(self):
         userInput = input()
         self.inventory[userInput] = 1
         print(userInput + ' added to inventory.')
-        return player1.inventory
+        return self.inventory
+
+    def add_to_weapons(self):
+        userInput = input()
+        self.weapons[userInput] = 20
+        print(userInput + ' added to weapons.')
+        return self.weapons
     
     def player_turn(self):
         userInput = input('Choose a weapon to use for your turn.')
-        loss = player1.weapons[userInput]
-        enemy1.hp -= loss
-        print('Your sword dealt ' + str(loss) + ' damage to ' + enemy1.name)
-        print(loss)
-        return self.hp
+        if userInput in self.weapons:
+            loss = self.weapons[userInput]
+            enemy1.hp -= loss
+            print('Your sword dealt ' + str(loss) + ' damage to ' + enemy1.name)
+            print(loss)
+            return self.hp
+        elif userInput == 'heal_potion':
+            if self.inventory['heal_potion'] >= 1:
+                self.inventory['heal_potion'] -= 1
+                self.hp += 20
+                print('You receive 20 hp from the potion.')
+                print(self.hp)
+            else:
+                print('You do not have any heal potions.')
+        elif userInput == 'attack_potion':
+            if self.inventory['attack_potion'] >= 1:
+                self.inventory['attack_potion'] -= 1
+                print('The damage from your chosen weapon is doubled.')
+                userInput = input('Choose a weapon to use for your turn.')
+                if userInput in self.weapons:
+                    loss = self.weapons[userInput] * 2
+                    enemy1.hp -= loss
+                    print('Your sword dealt ' + str(loss) + ' damage to ' + enemy1.name)
+                    print(loss)
+                    return self.hp
+            else:
+                print('You do not have any attack potions.')
+        else:
+            print('This item is not available in your inventory.')
 
 class Enemy():
     def __init__(self, name, hp, attack):
@@ -52,12 +82,12 @@ class Enemy():
         return self.name, self.hp, self.attack
     
     def enemy_turn(self):
-        player1.hp -= enemy1.attack
-        print('You have lost ' + str(enemy1.attack) + ' from ' + str(enemy1.name))
+        player1.hp -= self.attack
+        print('You have lost ' + str(self.attack) + ' from ' + str(self.name))
         print('Health: ' + str(player1.hp))
 
 
-player1 = Player('player1', 100, {'coins': 3}, {}) #Class instance for the player defined before the main function.
+player1 = Player('player1', 100, {'coins': 3, 'attack_potion': 1}, {})
 enemy1 = Enemy('Enemy1', 100, 15)
 
 #Introduction
@@ -75,10 +105,11 @@ def introduction():
 
 def towncenter():
         player1.add_apple_to_inventory()
+        print('Your inventory')
         print(player1.inventory)
         print("You found an apple on your way to the town.")
-        print("You are in the center of a town.")
-        userInput = input("Please enter a valid direction: ").upper()
+        print("You are in the center of a town. You should go East to purchase supplies.")
+        userInput = input("N = palace, E = shop, B = introduction: ")
         directions = {
             "N": palace,
             "E": shop,
@@ -95,6 +126,7 @@ def shop():
         print("What would you like to purchase?")
         print("sword: " + "2 coins")
         print("bow: " + "4 coins")
+        print('Or press W to return to the town center')
         userInput = input()
         if userInput in shop_items:
             if player1.inventory['coins'] >= shop_items[userInput]:
@@ -102,6 +134,7 @@ def shop():
                 print('Your inventory after your purchase.')
                 print(player1.inventory)
                 player1.weapons[userInput] = 20
+                player1.inventory[userInput] = 1
                 print('You purchased a ' + userInput)
                 print(player1.weapons)
                 print('The value beside the key indicates the damage dealt by the weapon.')
@@ -132,11 +165,12 @@ def palace():
 
 def upstairs():
     print('You encounter a particularly difficult enemy')
-    print('You find a potion that may be useful for the battle. Type potion to add this item to your inventory.')
-    player1.add_to_inventory()
-    print('A potion has been added to your inventory. It will restore 10 of your hp.')
+    print('You find a potion that may be useful for the battle. Type heal_potion to add this item to your inventory.')
+    player1.add_to_inventory_and_weapons()
+    print(player1.inventory)
+    print('A healing potion has been added to your inventory. It will restore 20 of your hp.')
     while player1.hp and enemy1.hp >= 1:
-        print(player1.inventory)
+        print(player1.weapons)
         player1.player_turn()
         print('Enemy1 has ' + str(enemy1.hp) + ' hp remaining.')
         print(enemy1.name + ' attacks.')
@@ -148,6 +182,9 @@ def upstairs():
 
     elif enemy1.hp <= 1:
         print('You defeated ' + enemy1.name + ' in battle.')
+        print('You find and add 5 coins to your inventory')
+        player1.inventory['coins'] += 5
+        print(player1.inventory)
         print('To be continued.')
 
-introduction()
+introduction() #First function call used when testing the whole game.
