@@ -16,16 +16,12 @@ class Player():
     def lesshp(self):
         self.hp -= 20
         return self.hp
-    
-    def get_inventory(self):
-        print(self.inventory)
-        return self.inventory
 
     def add_apple_to_inventory(self):
         self.inventory['apple'] = 1
         return self.inventory
 
-    def add_to_inventory_and_weapons(self):
+    def add_to_inventory(self):
         userInput = input()
         self.inventory[userInput] = 1
         print(userInput + ' added to inventory.')
@@ -53,6 +49,7 @@ class Player():
                 print(self.hp)
             else:
                 print('You do not have any heal potions.')
+                player1.player_turn()
         elif userInput == 'attack_potion':
             if self.inventory['attack_potion'] >= 1:
                 self.inventory['attack_potion'] -= 1
@@ -66,8 +63,10 @@ class Player():
                     return self.hp
             else:
                 print('You do not have any attack potions.')
+                player1.player_turn()
         else:
             print('This item is not available in your inventory.')
+            player1.player_turn()
 
 class Enemy():
     def __init__(self, name, hp, attack):
@@ -93,8 +92,7 @@ enemy1 = Enemy('Enemy1', 100, 15)
 #Introduction
 def introduction():
         print("You wake up to find yourself in a forest. You decide to travel North towards a town.")
-        print("N = North, E = East, W = West, S = South: ")
-        userInput = input()
+        userInput = input("N = North, E = East, W = West, S = South: ")
         directions = {
             "N": towncenter,
             }
@@ -102,53 +100,56 @@ def introduction():
             directions[userInput]() # Directions dictionary above contains keys and values for the functions that neighbour the current function.
         else:
             print("I literally said you can only go North !!!!, you deserve to start again now")
+            introduction()
 
 def towncenter():
+    if enemy1.hp == 0 and 'bow' not in player1.inventory:
+        print('Tip: You have enough coins to purchase a bow in the shop.')
+    elif enemy1.hp >= 0 and 'bow' not in player1.inventory:
         player1.add_apple_to_inventory()
-        print('Your inventory')
+        print('Your inventory lists what items you have and the amount of each item.')
         print(player1.inventory)
         print("You found an apple on your way to the town.")
-        print("You are in the center of a town. You should go East to purchase supplies.")
-        userInput = input("N = palace, E = shop, B = introduction: ")
-        directions = {
-            "N": palace,
-            "E": shop,
-            "B": introduction
-            }
-        if userInput in directions:
-            directions[userInput]()
-        else:
-            print("Enter a valid direction")
-            towncenter()
+
+    print("You are in the center of a town. You should go East to purchase supplies.")
+    userInput = input("N = palace, E = shop, B = introduction: ")
+    directions = {
+        "N": palace,
+        "E": shop,
+        "B": introduction
+        }
+    if userInput in directions:
+        directions[userInput]()
+    else:
+        print("Enter a valid direction")
+        towncenter()
 
 def shop():
-        shop_items = {'bow': 4, 'sword': 2}
-        print("What would you like to purchase?")
-        print("sword: " + "2 coins")
-        print("bow: " + "4 coins")
-        print('Or press W to return to the town center')
-        userInput = input()
-        if userInput in shop_items:
-            if player1.inventory['coins'] >= shop_items[userInput]:
-                player1.inventory['coins'] -= shop_items[userInput]
-                print('Your inventory after your purchase.')
-                print(player1.inventory)
-                player1.weapons[userInput] = 20
-                player1.inventory[userInput] = 1
-                print('You purchased a ' + userInput)
-                print(player1.weapons)
-                print('The value beside the key indicates the damage dealt by the weapon.')
-                shop()
-            else:
-                print("You do not have enough coins.")
-                shop()
-
-        elif userInput == "W":
-            towncenter()
-            
-        else:
-            print("Not a valid command")
+    shop_items = {'bow': 4, 'sword': 2}
+    print("What would you like to purchase?")
+    print('Or press W to return to the town center')
+    userInput = input("bow: 4 coins, sword: 2 coins ")
+    if userInput in shop_items:
+        if player1.inventory['coins'] >= shop_items[userInput]:
+            player1.inventory['coins'] -= shop_items[userInput]
+            print('Your inventory after your purchase.')
+            print(player1.inventory)
+            player1.weapons[userInput] = 20
+            player1.inventory[userInput] = 1
+            print('You purchased a ' + userInput)
+            print(player1.weapons)
+            print('The weapons dictionary indicates the effect of each weapon from your inventory.')
             shop()
+        else:
+            print("You do not have enough coins.")
+            shop()
+
+    elif userInput == "W":
+        towncenter()
+            
+    else:
+        print("Not a valid command")
+        shop()
 
 def palace():
         print("You encounter an enemy on the way to the palace.")
@@ -166,7 +167,7 @@ def palace():
 def upstairs():
     print('You encounter a particularly difficult enemy')
     print('You find a potion that may be useful for the battle. Type heal_potion to add this item to your inventory.')
-    player1.add_to_inventory_and_weapons()
+    player1.add_to_inventory()
     print(player1.inventory)
     print('A healing potion has been added to your inventory. It will restore 20 of your hp.')
     while player1.hp and enemy1.hp >= 1:
@@ -185,6 +186,7 @@ def upstairs():
         print('You find and add 5 coins to your inventory')
         player1.inventory['coins'] += 5
         print(player1.inventory)
-        print('To be continued.')
+        print('Plot to be continued.')
+        towncenter()
 
 introduction() #First function call used when testing the whole game.
