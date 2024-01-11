@@ -34,7 +34,7 @@ class Player():
         return self.weapons
     
     def player_turn(self):
-        userInput = input('Choose a weapon to use for your turn.')
+        userInput = input('Choose a weapon to use for your turn. You can also choose a potion if you have any available.')
         if userInput in self.weapons:
             loss = self.weapons[userInput]
             enemy1.hp -= loss
@@ -186,7 +186,7 @@ def upstairs():
         print('You find and add 5 coins to your inventory')
         player1.inventory['coins'] += 5
         print(player1.inventory)
-        print('Plot to be continued.')
+        print('Thank you for playing the demo of this game!')
         towncenter()
 
 introduction() #First function call used when testing the whole game.
