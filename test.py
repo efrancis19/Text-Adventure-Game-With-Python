@@ -1,6 +1,7 @@
 import time
 import random
 
+
 class Player():                                                 #Class for the player.                                               
     def __init__(self, name, hp, xp, inventory, weapon_dm):
         self.name = name            #Player's name.
