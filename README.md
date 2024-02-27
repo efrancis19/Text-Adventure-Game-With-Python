@@ -52,11 +52,11 @@ When you're ready to make this README your own, just edit this file and use the 
 
 Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
 
-## Name
-Choose a self-explaining name for your project.
+## Text Adventure Game With Python
 
 ## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+This is a text RPG game I have developed using Python. The game allows the player to navigate between areas of the map which are represented by functions. The player also has an inventory which contains the items they have for battles. One battle has been implemented where the player and the enemy take turns in combat.
+The game can save the player's most recent location as well as their's and the first enemy's health at specific intervals. This data is written and saved to two text files. When the player exits and returns to the game, the data from these files is used to update the player's location and health as well as the first enemy's health.
 
 ## Badges
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.

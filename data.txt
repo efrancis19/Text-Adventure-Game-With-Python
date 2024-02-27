@@ -1,0 +1,8 @@
+player1
+100
+0
+{'coins': 3, 'attack_potion': 1}
+{}
+Enemy1
+100
+15
